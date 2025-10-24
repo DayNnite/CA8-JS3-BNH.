@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="author" content="Sam G" />
+  <link rel="stylesheet" href="../css/style.css">
+
+  <title>Bear Ninja Hunter</title>
+    
+</head>
+<body>
+  <h1>Bear Ninja Hunter</h1>
+<div id= "results" class="card"> 
+  <!-- Where we will display the player's message -->
+  <p id="playerLine"></p>
+  <!-- Where we will display the computer's message -->
+  <p id="computerLine"></p>
+  <!-- Suggestion: add a result line to show who won -->
+  <p id="resultLine"></p>
+ </div>
+  <!-- This is javascipt -->
+  <script>
+  // Bear Ninja Hunter - minimal demo using prompt() and alert()
+  // NOTE: this script currently uses blocking prompt()/alert() calls for simplicity.
+  // Consider replacing prompts with a form or buttons for better UX and accessibility.
+
+  // The computer's choice is fixed here for demonstration; you can randomize this later.
+  const computerChoice = 'Bear';
+
+  // Ask for player's name. trim() and validate in real app to avoid null/empty values.
+  let playerName   = prompt("Welcome to Bear Hunter Ninja! Please enter your name to get started:");
+  alert(`Hi ${playerName} Let's Play!!`);
+
+  // Ask the player to pick one of the options. Consider normalizing the input
+  // (e.g., playerChoice = playerChoice.trim().toLowerCase()) and validating it.
+  let playerChoice = prompt("Who are you: Bear, Ninja, or Hunter?");
+
+  // Build messages to show on the page and in the console
+  let playerMessage   = `${playerName}, You picked ${playerChoice}!`;
+  let computerMessage = `The computer picked ${computerChoice}!`;
+  let resultMessage = "";
+
+  // Determine the result of the game
+  if (playerChoice == computerChoice) {
+      resultMessage = "It's a Tie!";
+      alert(resultMessage);
+  } else {
+      switch(playerChoice) {
+          case "Ninja":
+              if (computerChoice === "Bear") {
+                  resultMessage = "The computer wins!";
+              } else {
+                  alert(resultMessage);
+              }
+              break;
+          case "Hunter":
+              if (computerChoice === "Bear") {
+                  resultMessage = "The player wins!";
+              } else {
+                  alert(resultMessage);
+              }
+              break;
+          default:
+              alert("Invalid choice!");
+      }
+  }
+
+  // Put the messages into the DOM
+  document.getElementById("playerLine").innerHTML   = playerMessage;
+  document.getElementById("computerLine").innerHTML = computerMessage;
+  document.getElementById("resultLine").innerHTML = resultMessage;
+
+  // Log the results to the console
+  console.log(resultMessage);
+  console.log(playerMessage);
+  console.log(computerMessage);
+
+  </script>
+
+</body>
+</html>

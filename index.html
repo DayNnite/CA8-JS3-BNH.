@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="author" content="Sam G" />
   <link rel="stylesheet" href="../css/style.css">
 
@@ -20,62 +21,79 @@
  </div>
   <!-- This is javascipt -->
   <script>
-  // Bear Ninja Hunter - minimal demo using prompt() and alert()
-  // NOTE: this script currently uses blocking prompt()/alert() calls for simplicity.
-  // Consider replacing prompts with a form or buttons for better UX and accessibility.
+    
 
-  // The computer's choice is fixed here for demonstration; you can randomize this later.
-  const computerChoice = 'Bear';
+  const choices ["bear", "ninja","hunter"];
+  let playerName = "";
+  let playerChoice = "";
+  let computerChoice = "";
+  let playAgain = "";
+  let roundLog = ""; // for final recap
 
-  // Ask for player's name. trim() and validate in real app to avoid null/empty values.
-  let playerName   = prompt("Welcome to Bear Hunter Ninja! Please enter your name to get started:");
-  alert(`Hi ${playerName} Let's Play!!`);
-
-  // Ask the player to pick one of the options. Consider normalizing the input
-  // (e.g., playerChoice = playerChoice.trim().toLowerCase()) and validating it.
-  let playerChoice = prompt("Who are you: Bear, Ninja, or Hunter?");
-
-  // Build messages to show on the page and in the console
-  let playerMessage   = `${playerName}, You picked ${playerChoice}!`;
-  let computerMessage = `The computer picked ${computerChoice}!`;
-  let resultMessage = "";
-
-  // Determine the result of the game
-  if (playerChoice == computerChoice) {
-      resultMessage = "It's a Tie!";
-      alert(resultMessage);
+  playerName = prompt("Welcome to Bear Hunter Ninja! Please enter your name to get started:");
+  if (playerName === null) {
+    alert("Game cancelled. Reload the page to play.");
+    document.getElementById("results").textContent = "Game cancelled.";
   } else {
-      switch(playerChoice) {
-          case "Ninja":
-              if (computerChoice === "Bear") {
-                  resultMessage = "The computer wins!";
-              } else {
-                  alert(resultMessage);
-              }
-              break;
-          case "Hunter":
-              if (computerChoice === "Bear") {
-                  resultMessage = "The player wins!";
-              } else {
-                  alert(resultMessage);
-              }
-              break;
-          default:
-              alert("Invalid choice!");
+    playerName = playerName.trim();
+    if (playerName.length === 0) playerName = "Player";
+    alert (`Hello, ${playerName}!`);
+
+      do {
+      let raw = prompt(`${playerName}, choose: Bear, Ninja, or Hunter`);
+      if (raw === null) {
+        alert("Game cancelled by user.\nAccepted inputs: Bear, Ninja, Hunter.");
+        break;
       }
-  }
+      playerChoice = raw.trim().toLowerCase();
 
-  // Put the messages into the DOM
-  document.getElementById("playerLine").innerHTML   = playerMessage;
-  document.getElementById("computerLine").innerHTML = computerMessage;
-  document.getElementById("resultLine").innerHTML = resultMessage;
+      // Validate
+      if (playerChoice !== "bear" && playerChoice !== "ninja" && playerChoice !== "hunter") {
+        alert("Invalid input. Please type exactly: Bear, Ninja, or Hunter.");
+        continue; // ask again
+      }
 
-  // Log the results to the console
-  console.log(resultMessage);
-  console.log(playerMessage);
-  console.log(computerMessage);
+      const idx = Math.floor(Math.random() * choices.length);
+      computerChoice = choices[idx]; // already lowercase
 
-  </script>
+      let resultMessage = "";
+      if (playerChoice === computerChoice) {
+        resultMessage = "It's a tie.";
+      } else if (
+        (playerChoice === "bear"   && computerChoice === "ninja") ||
+        (playerChoice === "ninja"  && computerChoice === "hunter") ||
+        (playerChoice === "hunter" && computerChoice === "bear")
+      ) {
+        resultMessage = `${playerName} wins!`;
+      } else {
+        resultMessage = "Computer wins!";
+      }
+
+      const roundMsg =
+        `You chose: ${playerChoice}\n` +
+        `Computer chose: ${computerChoice}\n` +
+        `${resultMessage}`;
+      alert(roundMsg);
+      console.log("[BNH] " + roundMsg);
+
+      document.getElementById("playerLine").textContent   = `${playerName}, You picked ${playerChoice}!`;
+      document.getElementById("computerLine").textContent = `The computer picked ${computerChoice}!`;
+      document.getElementById("resultLine").textContent   = resultMessage;
+
+      roundLog += `${playerName}: ${playerChoice} | Computer: ${computerChoice} → ${resultMessage}\n`;
+
+      playAgain = prompt("Play again? (y/n)");
+      if (playAgain === null) break;
+      playAgain = playAgain.trim().toLowerCase();
+
+    } while (playAgain === "y" || playAgain === "yes");
+
+        const summary = `Game over, ${playerName}.\n\n` + roundLog.trim();
+    document.getElementById("results").textContent = summary;
+    alert(summary);
+  } // end name-else
+</script>
 
 </body>
 </html>
+

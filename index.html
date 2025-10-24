@@ -2,98 +2,113 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="author" content="Sam G" />
-  <link rel="stylesheet" href="../css/style.css">
-
-  <title>Bear Ninja Hunter</title>
-    
+  <title>Bear Ninja Hunter — Phase 3</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; padding: 1.5rem; }
+    main { max-width: 720px; margin: 0 auto; }
+    .card { background:#f7f7f7; padding:1rem; border-radius:10px; }
+    pre { white-space: pre-wrap; }
+  </style>
 </head>
 <body>
-  <h1>Bear Ninja Hunter</h1>
-<div id= "results" class="card"> 
-  <!-- Where we will display the player's message -->
-  <p id="playerLine"></p>
-  <!-- Where we will display the computer's message -->
-  <p id="computerLine"></p>
-  <!-- Suggestion: add a result line to show who won -->
-  <p id="resultLine"></p>
- </div>
-  <!-- This is javascipt -->
-  <script>
-    
+  <main>
+    <h1>Bear Ninja Hunter</h1>
+    <div id="results" class="card">
+      <p id="playerLine"></p>
+      <p id="computerLine"></p>
+      <p id="resultLine"></p>
+    </div>
+  </main>
 
-  const choices ["bear", "ninja","hunter"];
-  let playerName = "";
-  let playerChoice = "";
-  let computerChoice = "";
-  let playAgain = "";
-  let roundLog = ""; // for final recap
+  <!-- This is JavaScript -->
+  <script type="text/javascript">
+    // ===== Declarations (top) =====
+    // Array of valid choices (lowercase)
+    const choices = ["bear", "ninja", "hunter"];
 
-  playerName = prompt("Welcome to Bear Hunter Ninja! Please enter your name to get started:");
-  if (playerName === null) {
-    alert("Game cancelled. Reload the page to play.");
-    document.getElementById("results").textContent = "Game cancelled.";
-  } else {
-    playerName = playerName.trim();
-    if (playerName.length === 0) playerName = "Player";
-    alert (`Hello, ${playerName}!`);
+    // Mutable state for gameplay
+    let playerName = "";
+    let playerChoice = "";
+    let computerChoice = "";
+    let playAgain = "";
+    let roundLog = "";   // Accumulates per-round results for final recap
+    let summary = "";    // Final recap text
 
+    // ===== Greeting & name collection =====
+    playerName = prompt("Welcome to Bear Ninja Hunter! Please enter your name to get started:");
+    if (playerName === null) {
+      alert("Game cancelled. Reload the page to play.");
+      document.getElementById("results").textContent = "Game cancelled.";
+    } else {
+      playerName = playerName.trim();
+      if (playerName.length === 0) playerName = "Player";
+      alert(`Hello, ${playerName}!`);
+
+      // ===== Gameplay loop (must run at least once) =====
       do {
-      let raw = prompt(`${playerName}, choose: Bear, Ninja, or Hunter`);
-      if (raw === null) {
-        alert("Game cancelled by user.\nAccepted inputs: Bear, Ninja, Hunter.");
-        break;
-      }
-      playerChoice = raw.trim().toLowerCase();
+        // 1) Get player's choice
+        let raw = prompt(`${playerName}, choose: Bear, Ninja, or Hunter`);
+        if (raw === null) {
+          alert("Game cancelled by user.\nAccepted inputs: Bear, Ninja, Hunter.");
+          break; // exit loop on cancel
+        }
+        playerChoice = raw.trim().toLowerCase();
 
-      // Validate
-      if (playerChoice !== "bear" && playerChoice !== "ninja" && playerChoice !== "hunter") {
-        alert("Invalid input. Please type exactly: Bear, Ninja, or Hunter.");
-        continue; // ask again
-      }
+        // 2) Validate input (forced case)
+        if (playerChoice !== "bear" && playerChoice !== "ninja" && playerChoice !== "hunter") {
+          alert("Invalid input. Please type exactly: Bear, Ninja, or Hunter.");
+          continue; // restart this iteration
+        }
 
-      const idx = Math.floor(Math.random() * choices.length);
-      computerChoice = choices[idx]; // already lowercase
+        // 3) Computer choice via random index (use array.length, not a hard-coded number)
+        const idx = Math.floor(Math.random() * choices.length);
+        computerChoice = choices[idx]; // already lowercase
 
-      let resultMessage = "";
-      if (playerChoice === computerChoice) {
-        resultMessage = "It's a tie.";
-      } else if (
-        (playerChoice === "bear"   && computerChoice === "ninja") ||
-        (playerChoice === "ninja"  && computerChoice === "hunter") ||
-        (playerChoice === "hunter" && computerChoice === "bear")
-      ) {
-        resultMessage = `${playerName} wins!`;
-      } else {
-        resultMessage = "Computer wins!";
-      }
+        // 4) Determine winner (explicit rules)
+        let resultMessage = "";
+        if (playerChoice === computerChoice) {
+          resultMessage = "It's a tie.";
+        } else if (
+          (playerChoice === "bear"   && computerChoice === "ninja") ||
+          (playerChoice === "ninja"  && computerChoice === "hunter") ||
+          (playerChoice === "hunter" && computerChoice === "bear")
+        ) {
+          resultMessage = `${playerName} wins!`;
+        } else {
+          resultMessage = "Computer wins!";
+        }
 
-      const roundMsg =
-        `You chose: ${playerChoice}\n` +
-        `Computer chose: ${computerChoice}\n` +
-        `${resultMessage}`;
-      alert(roundMsg);
-      console.log("[BNH] " + roundMsg);
+        // 5) Round message (two outputs: alert + console)
+        const roundMsg =
+          `You chose: ${playerChoice}\n` +
+          `Computer chose: ${computerChoice}\n` +
+          `${resultMessage}`;
+        alert(roundMsg);                 // Output method #1
+        console.log("[BNH] " + roundMsg); // Output method #2
 
-      document.getElementById("playerLine").textContent   = `${playerName}, You picked ${playerChoice}!`;
-      document.getElementById("computerLine").textContent = `The computer picked ${computerChoice}!`;
-      document.getElementById("resultLine").textContent   = resultMessage;
+        // Update live DOM echo (optional)
+        document.getElementById("playerLine").textContent   = `${playerName}, You picked ${playerChoice}!`;
+        document.getElementById("computerLine").textContent = `The computer picked ${computerChoice}!`;
+        document.getElementById("resultLine").textContent   = resultMessage;
 
-      roundLog += `${playerName}: ${playerChoice} | Computer: ${computerChoice} → ${resultMessage}\n`;
+        // Accumulate for final recap
+        roundLog += `${playerName}: ${playerChoice} | Computer: ${computerChoice} → ${resultMessage}\n`;
 
-      playAgain = prompt("Play again? (y/n)");
-      if (playAgain === null) break;
-      playAgain = playAgain.trim().toLowerCase();
+        // 6) Ask to play again (postcondition)
+        playAgain = prompt("Play again? (y/n)");
+        if (playAgain === null) break;
+        playAgain = playAgain.trim().toLowerCase();
 
-    } while (playAgain === "y" || playAgain === "yes");
+      } while (playAgain === "y" || playAgain === "yes");
 
-        const summary = `Game over, ${playerName}.\n\n` + roundLog.trim();
-    document.getElementById("results").textContent = summary;
-    alert(summary);
-  } // end name-else
-</script>
-
+      // ===== Final recap to page and alert =====
+      summary = `Game over, ${playerName}.\n\n` + roundLog.trim();
+      document.getElementById("results").textContent = summary;
+      alert(summary);
+    }
+  </script>
 </body>
 </html>
-
